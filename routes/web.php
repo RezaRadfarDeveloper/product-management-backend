@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
@@ -21,17 +22,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/products' , function () {
 
-        $products = Product::orderBy('name')->get();
-        return ProductResource::collection($products);
-});
-
-Route::get('/products/{product}' , function (Product $product) {
-
-    return new ProductResource($product);
-
-});
+Route::get('/products/{product}' , [ProductController::class,'show']);
+Route::get('/products' , [ProductController::class,'index']);
+Route::post('/products' , [ProductController::class,'store']);
+Route::put('/products/{product}' , [ProductController::class,'update']);
+Route::delete('/products/{product}' , [ProductController::class,'destroy']);
 
 Route::get('/categories', function () {
 
