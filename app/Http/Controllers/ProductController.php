@@ -37,7 +37,8 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $data = request()->all();
+        $data = $this->validateRequest();
+
         $product = Product::create($data);
 
         return new ProductResource($product);
@@ -74,7 +75,7 @@ class ProductController extends Controller
      */
     public function update(Product $product)
     {
-        $data = request()->all();
+        $data = $this->validateRequest();
         $product->update($data);
 
         return new ProductResource($product);
@@ -92,5 +93,13 @@ class ProductController extends Controller
         $product->delete();
 
         return response()->noContent();
+    }
+
+    protected function validateRequest() {
+       return  request()->validate([
+            'name' => 'required|min:8|max:255',
+            'price' => 'required|integer|min:100',
+            'category_id' => 'required|exists:categories,id'
+        ]);
     }
 }
